@@ -1,27 +1,30 @@
-#include "header.h"
-
-void read_set()
-{
-    printf("\nREAD SET\n");
-    printf("\nREAD SET\n");
-    
-}
-
-
+#include "set.h"
 
 int main()
 {
     set SETA;
     
-    char input[30];
+    char input[120];
+    char* func; /* holds the function to call after the input is parsed */
+    char* args; /* holds the arguments for the function that gets called */
     int i;
+    struct CMD cmd[]={
+        {"read_set", read_set},
+        {"not_valid",NULL}
+    };
 
     while(1 < 2)
     {
         printf("\nEnter command: \n");
-        scanf("%s",input);
+        scanf("%[^\n]%*c",input);
         
         printf("\nThe string you've enterd is: %s", input);
+
+        func = strtok(input, " "); 
+        printf("\nThe func you've enterd is: %s", func);
+        
+        args = strtok(NULL, " ");
+        printf("\nThe args you've enterd is: %s", args);
 
         if(strcmp("stop",input) == 0)
         {
@@ -40,9 +43,7 @@ int main()
             printf("\nCOMMAND NOT FOUND \n");
         else
         {
-            (*(cmd[i].func))();
-            
-            
+            (*(cmd[i].func))();     
         }
 
 
