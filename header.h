@@ -5,12 +5,12 @@
 
 typedef char set[SET_LEN];
 
-void read_set(void);
+void read_set();
 
 struct 
 {
     char *name;
-    void (*func)(void);
+    void (*func)();
 } cmd[]={
     {"read_set", read_set},
     {"not_valid",NULL}
