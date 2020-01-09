@@ -8,6 +8,7 @@ int main()
     char* func; /* holds the function to call after the input is parsed */
     char* args; /* holds the arguments for the function that gets called */
     int i;
+    
     struct CMD cmd[]={
         {"read_set", read_set},
         {"not_valid",NULL}
@@ -43,7 +44,7 @@ int main()
             printf("\nCOMMAND NOT FOUND \n");
         else
         {
-            (*(cmd[i].func))();     
+            (*(cmd[i].func))(args);     
         }
 
 
