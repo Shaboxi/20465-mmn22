@@ -2,8 +2,8 @@
 
 int main()
 {
-    set SETA;
-    
+
+
     char input[120];
     char* func; /* holds the function to call after the input is parsed */
     char* args; /* holds the arguments for the function that gets called */
@@ -26,6 +26,9 @@ int main()
         
         args = strtok(NULL, " ");
         printf("\nThe args you've enterd is: %s", args);
+
+
+
 
         if(strcmp("stop",input) == 0)
         {
@@ -52,9 +55,6 @@ int main()
 
     }
     
-    SETA[0] = '1';
-
-    printf("\n BOOM: %c\n", SETA[0]);
 
     return 0;
 }
