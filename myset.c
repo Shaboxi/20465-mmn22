@@ -9,6 +9,7 @@ int main()
     struct CMD cmd[]={
         {"read_set", read_set},
         {"print_set", print_set},
+        {"union_set", union_set},
         {"not_valid",NULL}
     };
 

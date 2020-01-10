@@ -8,7 +8,9 @@
 #define SET_LEN 16 /* the set length */
 
 typedef char set[SET_LEN]; /* define a set as an array of chars */
+
 set SETA,SETB,SETC,SETD,SETE,SETF;
+
 struct SETS
 {
     char *name;
@@ -19,6 +21,7 @@ struct SETS
 /* define the commands */
 void read_set(char *args);
 void print_set(char *args);
+void union_set(char *args);
 
 /* helper functions */
 int string_to_set(char *set);
