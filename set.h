@@ -26,7 +26,7 @@ void union_set(char *args);
 
 /* helper functions */
 int string_to_set(char *set);
-int check_duplication(int setIndex, char *value);
+int check_duplication(set checkDup, char *value);
 void zero_set(set toZero);
 
 /* define a struct for commands */
