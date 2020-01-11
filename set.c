@@ -1,17 +1,5 @@
 #include "set.h"
 
-/* define the sets and init them with 0 
-set SETA,SETB,SETC,SETD,SETE,SETF = { 0 };
-
-
-set SETA = { 0 };
-set SETB = { 0 };
-set SETC = { 0 };
-set SETD = { 0 };
-set SETE = { 0 };
-set SETF = { 0 };
-*/
-
 /* create a struct of sets */
 struct SETS sets[]={
     {"SETA", &SETA,0},
@@ -23,7 +11,7 @@ struct SETS sets[]={
     {"not_valid",NULL,0}
 };
 
-/* get a set as a string the returns the set id matches */
+/* get a set as a string and returns the set the set id matches */
 int string_to_set(char *set)
 {
     int i =0;
@@ -33,8 +21,7 @@ int string_to_set(char *set)
         if(strcmp(sets[i].name,set) == 0)
         {
             return i; 
-        }
-            
+        }            
     }
 
     return i; /* return null */
@@ -67,57 +54,70 @@ int check_duplication(int setIndex, char *value)
     return intValue;
 }
 
+/* define the sets and init them with 0 */
+void zero_set(set toZero)
+{
+    int i = 0;
+    for (i = 0; i < SET_LEN ; i++)
+    {
+        toZero[i] = '0';
+    }    
+}
+
+
 /* put data in a set */
 void read_set(char *args)
 {
     int setIndex;
     int i;
     char* value;    
-
+    
+/*
     printf("\nREAD SET");
     printf("\nARGS: %s", args); 
+*/
 
     /* get the set id */
     value = strtok(args, ","); 
     setIndex = string_to_set(value);
     
-    
+    zero_set(*sets[setIndex].set);
 
+    /* check if we got to the end of the input, 
+    otherwise, put the value in the set */
     for(i = 0; strcmp("-1",value) != 0; i++)
     {
         value = strtok(NULL, ","); 
-        *sets[setIndex].set[i] =  atoi(value);
+
+        if(strcmp("-1",value) == 0)
+            (*sets[setIndex].set)[i] = NULL;
+        else
+            (*sets[setIndex].set)[i] = *value;
     }
     
+    /* mark the set as not empty */
     sets[setIndex].isEmpty = 1;
-    
-/*
-    printf ("ARGS? %s", args);
-    value = strtok(NULL, ",");
-    printf("\n values not handeld: %s\n", value);
 
-    printf("\n From Read_set: %d\n", *sets[setIndex].set[0]);
-    printf("\n From Read_set: %d\n", SETA[0]);
-*/
 }
 
 /* print data from a set */
 void print_set(char *args)
 {
     int setIndex;
-    int i;
+    int i = 0;    
 
     setIndex = string_to_set(args);
-
-    printf("\nPRINT SET\n");
-    printf("\nset: %d\n", setIndex);
+    
+    printf("\nPRINT %s: ", sets[setIndex].name);   
+    
     if(sets[setIndex].isEmpty == 0)
-        printf("\nThe set is empty\n");
+        printf("The set is empty\n");
     else
-    {
-        for(i=0; *sets[setIndex].set[i] != -1; i++ )
-        {
-            printf("%d ", *sets[setIndex].set[i]);    
+    {                
+        while ((*sets[setIndex].set)[i])        
+        {            
+            printf("%c ", (*sets[setIndex].set)[i]); 
+            i++;   
         }        
     }
     printf("\n");
@@ -126,42 +126,61 @@ void print_set(char *args)
 /* unites sets */
 void union_set(char *args)
 {
-    int i,k;
-    printf("\nUNION SET\n");
+    int i;
     
-    /*sets[1] = (set) calloc(16,sizeof(char));*/
-    sets[1]->set[1] = 'a';
-    SETA[0] = 5;
-    for (i = 0; i < 6; i++)
+    printf("\nUNION SET\n");
+
+/*    
+    for (i = 0; i < 3; i++)
     {
         
         printf("\nprint set: %d ---> ", i);
         
-        for(k = 0; k < 6; k++ )
+        for(k = 0; k < 4; k++ )
         {
-            printf("%d ", *sets[i].set[k]);  
+            printf("%d ", (char)*((sets[i].set)[k]));  
         }
 
             
     }
+*/
 
-    printf("\n--- ");
+    
 
-    printf("\nprint set: A ---> ");
+
+    printf("\n\nprint set: A ---> ");
     printf("%d ", SETA[0]);
     printf("%d ", SETA[1]);
     printf("%d ", SETA[2]);
     printf("%d ", SETA[3]);
 
     printf("\nprint set: B ---> ");
-    printf("%d ", SETB[0]);
-    printf("%d ", SETB[1]);
-    printf("%d ", SETB[2]);
-    printf("%d ", SETB[3]);
+    printf("%c ", (char)(SETB[0]));
+    printf("%c ", (char)(SETB[1]));
+    printf("%c ", (char)(SETB[2]));
+    printf("%c ", (char)(SETB[3]));
 
     printf("\nprint set: C ---> ");
-    printf("%d ", SETC[0]);
-    printf("%d ", SETC[1]);
-    printf("%d ", SETC[2]);
-    printf("%d ", SETC[3]);    
+    printf("%c ", (char)(SETC[0]));
+    printf("%c ", (char)(SETC[1]));
+    printf("%c ", (char)(SETC[2]));
+    printf("%c ", (char)(SETC[3]));
+
+    printf("\n -asaf %d ", (*sets[2].set)[3]);
+    printf("\n -asaf %c ", (*sets[2].set)[3]);
+    
+
+    /*
+
+        
+    i = strcmp("-",(sets[2].set)[2]);
+    printf("\n strcmp ---> %d", strcmp("-1",(sets[2].set)[2]));
+    printf("\n--- ");
+    printf("\nprint set: A ---> %p", &SETA[0]);    
+    printf("\nprint set: 0 ---> %p", &*sets[0].set[0]);
+    printf("\n --%d ", SETB[1]);
+    printf("\n --%s ", *(sets[1].set+1));
+    printf("\n --%s ", *(sets[1].set+0));
+    */
+     
 }
