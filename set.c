@@ -53,7 +53,6 @@ void zero_set(set toZero)
     }    
 }
 
-
 /* put data in a set */
 void read_set(char *args)
 {
@@ -80,7 +79,7 @@ void read_set(char *args)
         value = strtok(NULL, ","); 
 
         dupFlag = check_duplication(*sets[setIndex].set,value);
-
+        /* bits */
         if(strcmp("-1",value) == 0)
             (*sets[setIndex].set)[i] = NULL;
         else if (dupFlag == 0) /* if no duplication found */
