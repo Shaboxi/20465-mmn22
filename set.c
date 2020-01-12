@@ -103,6 +103,16 @@ int missing_commas(char *str)
     return 1;
 }
 
+/* check illegal commas */
+int illegal_commas(char *str)
+{
+    int len = strlen(str);
+    char *lastChar = &str[len-1];
+        if(lastChar[0] == ',')
+            return 1;
+    return 0;                              
+}
+
 /* validate input */
 /* return 0 if input is validated, else prints a relevent error and returns 1 */
 int validate_input(char *input)
@@ -146,18 +156,13 @@ int validate_input(char *input)
 */
     dummyFunc = strtok(dummy, " ");  
     dummyArgs = strtok(NULL, " ");
-    
-    if(consective_commas(dummyArgs) == 1)
+        
+    if(illegal_commas(dummyFunc) == 1)
     {
-        printf("\nMultiple consective commas");
-        return 1;
+        printf("\nIllegal comma");
+        return 1;        
     }
 
-    if(missing_commas(dummyArgs) == 1)
-    {
-        printf("\nMissing commas");
-        return 1;
-    }
 
     /* check if the command exists */
     for (i = 0; i < 7; i++)
@@ -173,7 +178,17 @@ int validate_input(char *input)
         return 1;
     }
 
-    
+    if(consective_commas(dummyArgs) == 1)
+    {
+        printf("\nMultiple consective commas");
+        return 1;
+    }
+
+    if(missing_commas(dummyArgs) == 1)
+    {
+        printf("\nMissing commas");
+        return 1;
+    }
 
     /* if this is one of the 3 params functions */
     if(strcmp(dummyFunc,"read_set") != 0 && strcmp(dummyFunc,"print_set") != 0)
