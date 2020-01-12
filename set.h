@@ -5,6 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <limits.h>
 #define SET_LEN 16 /* the set length */
 
 typedef char set[SET_LEN]; /* define a set as an array of chars */
@@ -23,6 +24,7 @@ struct SETS
 void read_set(char *args);
 void print_set(char *args);
 void union_set(char *args);
+void intersect_set(char *args);
 
 /* helper functions */
 int string_to_set(char *set);

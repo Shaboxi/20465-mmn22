@@ -10,6 +10,7 @@ int main()
         {"read_set", read_set},
         {"print_set", print_set},
         {"union_set", union_set},
+        {"intersect_set", intersect_set},
         {"not_valid",NULL}
     };
 

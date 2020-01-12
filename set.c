@@ -31,15 +31,14 @@ int string_to_set(char *set)
 int check_duplication(set checkDup, char *value)
 {
     int i = 0;
+    int bit;
     
-    printf("\ncheckdup: %c value: %c ", checkDup[i], *value);
-    for (i = 0; checkDup[i] ; i++)
-    {        
-        if(checkDup[i] == *value)
-        {
-            return 1;
-        }            
-    }  
+    bit = (checkDup[i/8] & (1 << (i%8)));
+    if(bit == 1)
+    {
+        return 1;
+    }            
+    
     return 0;
 }
 
@@ -47,9 +46,9 @@ int check_duplication(set checkDup, char *value)
 void zero_set(set toZero)
 {
     int i = 0;
-    for (i = 0; i < SET_LEN ; i++)
+    for (i = 0; i < CHAR_MAX ; i++)
     {
-        toZero[i] = '0';
+        toZero[i/8] &= ~(1 << (i%8));
     }    
 }
 
@@ -57,15 +56,9 @@ void zero_set(set toZero)
 void read_set(char *args)
 {
     int setIndex;
-    int i;
     char* value;
     int dupFlag;  
     
-/*
-    printf("\nREAD SET");
-    printf("\nARGS: %s", args); 
-*/
-
     /* get the set id */
     value = strtok(args, ","); 
     setIndex = string_to_set(value);
@@ -74,30 +67,24 @@ void read_set(char *args)
 
     /* check if we got to the end of the input, 
     otherwise, put the value in the set */
-    for(i = 0; strcmp("-1",value) != 0; i++)
+    while(strcmp("-1",value) != 0)
     {
         value = strtok(NULL, ","); 
 
+        /* 0 if not duplication, 1 is theres a duplication */
         dupFlag = check_duplication(*sets[setIndex].set,value);
-        /* bits */
+        
         if(strcmp("-1",value) == 0)
-            (*sets[setIndex].set)[i] = NULL;
+            (*sets[setIndex].set)[atoi(value)] = NULL;
         else if (dupFlag == 0) /* if no duplication found */
         {
-            (*sets[setIndex].set)[i] = *value;
-            /* <-works for char
-            strcpy((sets[setIndex].set)[i],value);
-            */
-        }
-            
-        else /* if found a duplication, make sure not to skip this index */
-            i--;
-                
+            /* set 1 in the bit of the index */
+            (*sets[setIndex].set)[atoi(value)/8] |= (1 << (atoi(value)%8));
+        }            
     }
     
     /* mark the set as not empty */
     sets[setIndex].isEmpty = 1;
-
 }
 
 /* print data from a set */
@@ -105,7 +92,7 @@ void print_set(char *args)
 {
     int setIndex;
     int i = 0;    
-
+    int bit; 
     setIndex = string_to_set(args);
     
     printf("\nPRINT %s: ", sets[setIndex].name);   
@@ -114,9 +101,14 @@ void print_set(char *args)
         printf("The set is empty\n");
     else
     {                
-        while ((*sets[setIndex].set)[i])        
+        while (i < CHAR_MAX)
         {            
-            printf("%c ", (*sets[setIndex].set)[i]); 
+            /* get the data of the bit */
+            bit = ((*sets[setIndex].set)[i/8] & (1 << (i%8)));
+            /*printf("%d ", bit); */
+            /* if the bit is not 0, print it */
+            if(bit != 0)
+                printf("%d ", i); 
             i++;   
         }        
     }
@@ -126,12 +118,49 @@ void print_set(char *args)
 /* unites sets */
 void union_set(char *args)
 {
-    int i,k=0;
+    int i;
     int indexSet1,indexSet2,indexSet3;
     char* value;
-    int checkDup;
+    int bit1,bit2;
+
     printf("\nUNION SET\n");
 
+    /* get the sets id */
+    value = strtok(args, ","); 
+    indexSet1 = string_to_set(value);
+    
+    value = strtok(NULL, ","); 
+    indexSet2 = string_to_set(value);
+
+    value = strtok(NULL, ","); 
+    indexSet3 = string_to_set(value);
+
+    /* put the data of set1 and set2 in set3 */
+    for(i=0; i < CHAR_MAX; i++)
+    {
+        /* get the data of the bit */
+        bit1 = ((*sets[indexSet1].set)[i/8] & (1 << (i%8)));
+        bit2 = ((*sets[indexSet2].set)[i/8] & (1 << (i%8)));
+
+        /* if the bit is not 0, print it */
+        if(bit1 != 0 || bit2 != 0)
+            (*sets[indexSet3].set)[i/8] |= (1 << (i%8));
+            
+    }
+    
+    /* mark the set as not empty */
+    sets[indexSet3].isEmpty = 1;    
+}
+
+/* intersect sets */
+void intersect_set(char *args)
+{
+    int i;
+    int indexSet1,indexSet2,indexSet3;
+    char* value;
+    int bit1,bit2;
+
+    printf("\nUNION SET\n");
 
     /* get the sets id */
     value = strtok(args, ","); 
@@ -144,90 +173,21 @@ void union_set(char *args)
     indexSet3 = string_to_set(value);
 
     /* put the data of set1 and set2 in set3 
-    zero_set(*sets[indexSet3].set);
-    */
+    zero_set(*sets[indexSet3].set);*/
 
-    
-
-    for(i=0;(*sets[indexSet1].set)[i];i++)
+    for(i=0; i < CHAR_MAX; i++)
     {
-        (*sets[indexSet3].set)[i] = (*sets[indexSet1].set)[i];
-    }
+        /* get the data of the bit */
+        bit1 = ((*sets[indexSet1].set)[i/8] & (1 << (i%8)));
+        bit2 = ((*sets[indexSet2].set)[i/8] & (1 << (i%8)));
 
-    
-    
-
-    for(k=0;(*sets[indexSet2].set)[k];k++)
-    {
-        
-        /*
-        printf("\nset2 value: %c", (*sets[indexSet2].set)[k]);
-        checkDup = check_duplication(*sets[indexSet3].set,sets[indexSet2].set[k]);
-        printf("\nthe value compared: %c checkdup: %d ", (*sets[indexSet2].set)[k], checkDup);
-        if(checkDup == 0)
-        {
-            (*sets[indexSet3].set)[i] = (*sets[indexSet2].set)[k];
-            i++;
-        }
-        
-        */
-    
-       printf("\nset2 value: %c", (*sets[indexSet2].set)[k]);
-       checkDup = check_duplication(*sets[indexSet3].set,(sets[indexSet2].set)[k]);
-       printf("\nthe value compared: %c checkdup: %d ", (*sets[indexSet2].set)[k], checkDup);
-       if(checkDup == 0)
-       {
-           (*sets[indexSet3].set)[i] = (*sets[indexSet2].set)[k];
-           i++;
-       }
-
-    }
-
+        /* if the bit is not 0, print it */
+        if(bit1 && bit2)
+            (*sets[indexSet3].set)[i/8] |= (1 << (i%8));
+            
+    }  
 
     /* mark the set as not empty */
-    sets[indexSet3].isEmpty = 1;    
+    sets[indexSet3].isEmpty = 1; 
 
-    /*
-    
-    strcpy((sets[2].set)[2],"22");
-    strcpy(&SETC[2],"22");
-
-    printf("\n 1. %c ", (*sets[2].set)[3]);
-    printf("\n 2. %c ", (char)(SETC[2]));
-
-    printf("\n\nprint set: A ---> ");
-    printf("%d ", SETA[0]);
-    printf("%d ", SETA[1]);
-    printf("%d ", SETA[2]);
-    printf("%d ", SETA[3]);
-
-    printf("\nprint set: B ---> ");
-    printf("%c ", (char)(SETB[0]));
-    printf("%c ", (char)(SETB[1]));
-    printf("%c ", (char)(SETB[2]));
-    printf("%c ", (char)(SETB[3]));
-
-    printf("\nprint set: C ---> ");
-    printf("%c ", (char)(SETC[0]));
-    printf("%c ", (char)(SETC[1]));
-    printf("%c ", (char)(SETC[2]));
-    printf("%c ", (char)(SETC[3]));
-
-
-    
-
-    
-
-    -------
-
-    i = strcmp("-",(sets[2].set)[2]);
-    printf("\n strcmp ---> %d", strcmp("-1",(sets[2].set)[2]));
-    printf("\n--- ");
-    printf("\nprint set: A ---> %p", &SETA[0]);    
-    printf("\nprint set: 0 ---> %p", &*sets[0].set[0]);
-    printf("\n --%d ", SETB[1]);
-    printf("\n --%s ", *(sets[1].set+1));
-    printf("\n --%s ", *(sets[1].set+0));
-    */
-     
 }
