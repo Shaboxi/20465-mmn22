@@ -229,3 +229,42 @@ void sub_set(char *args)
     sets[indexSet3].isEmpty = 1; 
 
 }
+
+/* symdiff_set */
+void symdiff_set(char *args)
+{
+    int i;
+    int indexSet1,indexSet2,indexSet3;
+    char* value;
+    int bit1,bit2;
+
+    printf("\nSYMDIFF SET\n");
+
+    /* get the sets id */
+    value = strtok(args, ","); 
+    indexSet1 = string_to_set(value);
+    
+    value = strtok(NULL, ","); 
+    indexSet2 = string_to_set(value);
+
+    value = strtok(NULL, ","); 
+    indexSet3 = string_to_set(value);
+
+    for(i=0; i < CHAR_MAX; i++)
+    {
+        /* get the data of the bit */
+        bit1 = ((*sets[indexSet1].set)[i/8] & (1 << (i%8)));
+        bit2 = ((*sets[indexSet2].set)[i/8] & (1 << (i%8)));
+
+        /* make sure only bits from set1 are set to 1, change bit in set3 to also be 1 */
+        if((bit1 || bit2) && bit1 != bit2)
+            (*sets[indexSet3].set)[i/8] |= (1 << (i%8));
+        else /* else zero it */
+            (*sets[indexSet3].set)[i/8] &= ~(1 << (i%8));
+            
+    }  
+
+    /* mark the set as not empty */
+    sets[indexSet3].isEmpty = 1; 
+
+}
