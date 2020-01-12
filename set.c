@@ -135,25 +135,6 @@ int validate_input(char *input)
     strcpy(dummy,input);
     strcpy(dummy2,input);
     
-
-    /* validate the arguments of an input */
-    /*replace_spaces(dummy);*/
-    
-    /*
-    printf("\nvalidating input(dummy): %s", dummy);
-    printf("\ndummy after space clean: %s", dummy);
-    ---
-
-    dummyFunc = strtok(dummy, "_set");
-    printf("\ndummyFunc: %s", dummyFunc);
-    
-    dummyArgs = strtok(NULL, "_set");    
-    printf("\ndummyArgs: %s", dummyArgs);
-    ---
-    printf("\ndummyFunc: %s", dummyFunc);    
-    printf("\ndummyArgs: %s", dummyArgs);
-    
-*/
     dummyFunc = strtok(dummy, " ");  
     dummyArgs = strtok(NULL, " ");
         
@@ -184,7 +165,7 @@ int validate_input(char *input)
         return 1;
     }
 
-    if(missing_commas(dummyArgs) == 1)
+    if(missing_commas(dummyArgs) == 1 && strcmp(dummyFunc,"print_set") != 0)
     {
         printf("\nMissing commas");
         return 1;
