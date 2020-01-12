@@ -1,15 +1,31 @@
-read_set SETA,1,2,3,3,3,3,-1
-print_set SETA
-read_set SETB,3,3,3,3,4,4,4,5,5,5,-1
-print_set SETB
-union_set SETA,SETB,SETC
-print_set SETC
-union_set SETA,SETA,SETD
-print_set SETD
-intersect_set SETA,SETB,SETA
-print_set SETA
-sub_set SETB,SETB,SETB
-print_set SETB
-union_set SETD,SETD,SETD
-print_set SETD
+read_set SETG, 3, 6, 5, 4, 4, -1
+union_set SETC, SETA
+print_set SETC, SETD
+sub_set SETF, , SETD, SETA
+intersect_set SETF SETD SETA
+symdiff_set, SETF, SETB, SETA
+read_set , SETA, -1
+read_set ,, SETA, -1
+print_set , SETA
+print_set SETA,
+print_set        SETA       ,
+read_set setA, 3, 6, 5, 4, 4, -1
+read_set SETA,5,4,,3,-1
+read_set SETA,5,4,3,
+read_set SETA,5,400,,3,-1
+read_set SETA,,5,400,,3,-1
+read_set SETA5,
+read_set SETA,5,,,3,-1
+union_set SETA,,SETB,SETC
+read_set SETC,5,-10
+read_set SETC,5 , , -10
+read_set SETC,5 , , -1
+do_it SETA, SETB, SETC
+read_set SETA,5,-1
+UNION_set SETA, SETB, SETC
+read_set SETB, 45, 567, 34, -1
+read_set SETA, 45, 56, 45, 34
+read_set SETA, 45 ,-3, 2, 45, 34, -1
+read_set SETA, 45, 2, xyz, 34, -1
+read_set SETA, 45, 2, 24.0, 34, -1
 stop

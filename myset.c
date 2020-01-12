@@ -4,16 +4,19 @@
 void replace_starting_spaces(char *str)
 {
     int count = 0; 
+    int f = 0;
     int i;
-    for (i = 0; str[i]; i++) 
-        if (str[i] != ' ')
-        {
-            str[count++] = str[i];
+
+    for (i = 0; str[i]; i++){
+        if (f == 1 || str[i] != ' ') {
+            f=1;
+            str[count++] = str[i];  
         }
-            
-                                  
-    str[count] = '\0';    
+    }                            
+    str[count] = '\0';
+
 }
+
 
 int main()
 {
@@ -36,10 +39,10 @@ int main()
         printf("\n\nEnter command: \n");
         
         scanf("%[^\n]%*c",input);
+
+        /* handle spaces */            
+        replace_starting_spaces(input);
         
-        /*printf("\ninput b4e spaces: %s", input);
-         replace_starting_spaces(input);
-        printf("\ninput after spaces: %s", input);*/
 
         if(strcmp("stop",input) == 0)
         {
@@ -47,16 +50,14 @@ int main()
             break;
         }
 
-        /* handle spaces */
-        /* 1. handle spaces before function name */
-
         /* validate input */
         if(validate_input(input) == 0)
         {
             /* get the func name and args */                
-            strtok(input, " ");                
-            args = strtok(NULL, " ");
-            /*replace_starting_spaces(args);*/
+            strtok(input, " ");   
+            args = &input[strlen(input) + 1];             
+            /*args = strtok(NULL, " ");*/
+            replace_spaces(args);
             
             /* check if the command exists */
             for (i = 0; cmd[i].func!=NULL; i++)

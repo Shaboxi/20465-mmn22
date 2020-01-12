@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#define INPUT_SIZE 100
+#define INPUT_SIZE 1000
 
 #define SET_LEN 16 /* the set length */
 typedef char set[SET_LEN]; /* define a set as an array of chars */
