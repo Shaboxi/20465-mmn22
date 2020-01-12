@@ -19,8 +19,14 @@ int main()
     while(1 < 2)
     {
         printf("\n\nEnter command: \n");
+        
         scanf("%[^\n]%*c",input);
-
+        
+        if(strcmp("stop",input) == 0)
+        {
+            printf("\nExit Program\n");
+            break;
+        }
         /* validate input */
         if(validate_input(input) == 0)
         {
@@ -28,12 +34,6 @@ int main()
             strtok(input, " ");                
             args = strtok(NULL, " ");
             
-            if(strcmp("stop",input) == 0)
-            {
-                printf("\nExit Program\n");
-                break;
-            }
-
             /* check if the command exists */
             for (i = 0; cmd[i].func!=NULL; i++)
             {

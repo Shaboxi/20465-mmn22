@@ -32,7 +32,11 @@ void symdiff_set(char *args);
 int string_to_set(char *set);
 int check_duplication(set checkDup, char *value);
 void zero_set(set toZero);
+void replace_spaces(char *str);
+int consective_commas(char *str);
+int missing_commas(char *str);
 int validate_input(char *input);
+
 
 /* define a struct for commands */
 struct CMD

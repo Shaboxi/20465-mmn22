@@ -24,7 +24,7 @@ int string_to_set(char *set)
         }            
     }
 
-    return i; /* return null */
+    return -1; /* return -1 if set does not exists */
 }
 
 /* return 1 if char value is found in the array. else returns 0 */
@@ -80,31 +80,195 @@ void replace_spaces(char *str)
     str[count] = '\0'; 
 }
 
+/* check consective commas */
+int consective_commas(char *str)
+{
+    int i;
+
+    for (i = 1; str[i]; i++) 
+        if (str[i] == ',' && str[i-1] == ',') 
+            return 1;
+                                  
+    return 0;
+}
+
+/* check missing commas */
+int missing_commas(char *str)
+{
+    int i;
+    for (i = 1; str[i]; i++) 
+        if (str[i] == ',') 
+            return 0;
+                                  
+    return 1;
+}
+
 /* validate input */
 /* return 0 if input is validated, else prints a relevent error and returns 1 */
 int validate_input(char *input)
 {
-    char dummy[INPUT_SIZE];
+    char dummy[INPUT_SIZE]; /* a copy of the input */
+    char dummy2[INPUT_SIZE]; /* a copy of the input */
+    char* dummyFunc; 
     char* dummyArgs;
+    char* setName1;
+    char* setName2;
+    char* setName3;
+    int dummy2Length;
+    char* checkLast; /* used to store the last 2 chars of the input */
+    /* create a struct of commands for validation */
+    char *commands[7] = {"read_set", "print_set", "union_set", "intersect_set", "sub_set", "symdiff_set", "not_valid"};
+    int i;
+    int noCommandFlag = 0;
 
     /* copy the input to a char dummy[] so the real input wont get dirty */
     strcpy(dummy,input);
-    printf("\nvalidating input(dummy): %s", dummy);
+    strcpy(dummy2,input);
+    
 
-    /* since the command validation in preformed in main(), 
-    this function will validate the arguments of an input. */
-    replace_spaces(dummy);
-    printf("\ndummy after space clean: %s", dummy);
+    /* validate the arguments of an input */
+    /*replace_spaces(dummy);*/
+    
     /*
-    strtok(dummy, " ");
-    printf("\ndummy after strtok: %s", dummy);
-    dummyArgs = strtok(NULL, " ");    
+    printf("\nvalidating input(dummy): %s", dummy);
+    printf("\ndummy after space clean: %s", dummy);
+    ---
 
-    printf("\nvalidating args: %s", dummyArgs);
+    dummyFunc = strtok(dummy, "_set");
+    printf("\ndummyFunc: %s", dummyFunc);
+    
+    dummyArgs = strtok(NULL, "_set");    
+    printf("\ndummyArgs: %s", dummyArgs);
+    ---
+    printf("\ndummyFunc: %s", dummyFunc);    
+    printf("\ndummyArgs: %s", dummyArgs);
+    
 */
+    dummyFunc = strtok(dummy, " ");  
+    dummyArgs = strtok(NULL, " ");
+    
+    if(consective_commas(dummyArgs) == 1)
+    {
+        printf("\nMultiple consective commas");
+        return 1;
+    }
+
+    if(missing_commas(dummyArgs) == 1)
+    {
+        printf("\nMissing commas");
+        return 1;
+    }
+
+    /* check if the command exists */
+    for (i = 0; i < 7; i++)
+    {
+        if(strcmp(commands[i],dummyFunc) == 0)
+        {
+            noCommandFlag = 1;
+        }
+    }
+    if(noCommandFlag == 0)
+    {
+        printf("\nUndifiend command name");
+        return 1;
+    }
+
+    
+
+    /* if this is one of the 3 params functions */
+    if(strcmp(dummyFunc,"read_set") != 0 && strcmp(dummyFunc,"print_set") != 0)
+    {
+        /* check if there are 3 setes */
+        setName1 = strtok(dummyArgs, ",");
+        if(setName1 == NULL)
+        {
+            printf("\nMissing parameter");
+            return 1;
+        }
+
+        setName2 = strtok(NULL, ",");
+        if(setName2 == NULL)
+        {
+            printf("\nMissing parameter");
+            return 1;
+        }
+
+        setName3 = strtok(NULL, ",");
+        if(setName3 == NULL)
+        {
+            printf("\nMissing parameter");
+            return 1;
+        }
+        
+        if( string_to_set(setName1) == -1  || string_to_set(setName2) == -1 || string_to_set(setName3) == -1)
+        {
+            printf("\nUndifient set name");
+            return 1;
+        }
+
+    }
+    else if(strcmp(dummyFunc,"read_set") == 0)
+    {                
+        /* get the set id */
+        setName1 = strtok(dummyArgs, ","); 
+        
+        if(string_to_set(setName1) == -1)
+        {
+            printf("\nUndefined set name");
+            return 1;
+        }
+
+        /* check if last 2 chars are '-1' */
+        dummy2Length = strlen(dummy2);
+        checkLast = &dummy2[dummy2Length-2];
+        if(strcmp(checkLast,"-1") != 0)
+        {
+            printf("\nList of members is not terminiated corectly (missing -1)");
+            return 1;
+        }
+
+        /* check range of values */
+        while(strcmp("-1",dummyArgs) != 0)
+        {
+            dummyArgs = strtok(NULL, ","); 
+            
+            if(atoi(dummyArgs) == 0 || atof(dummyArgs) == 0.0)
+            {
+                printf("\nInvalid set member - not an intger");
+                return 1;                
+            }
+            else if(atoi(dummyArgs) > CHAR_MAX || atoi(dummyArgs) < -1)
+            {
+                printf("\nInvalid set member - value out of range");
+                return 1;
+            }    
+
+        }
 
 
-    return 1;
+    }
+    else /* then its a print_set command */
+    {                
+        /* get the set id */
+        setName1 = strtok(dummyArgs, ","); 
+        if(setName1 != NULL && string_to_set(setName1) == -1)
+        {
+            printf("\nUndefined set name");
+            return 1;
+        }     
+
+        setName2 = strtok(NULL, ",");
+        if(setName2 != NULL)
+        {
+            printf("\nExtra text after the end of the command");
+            return 1;
+        }               
+    }
+    
+
+    
+    
+    return 0;
 }
 
 /* COMMANDS START HERE */
