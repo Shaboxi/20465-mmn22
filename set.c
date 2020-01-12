@@ -147,7 +147,7 @@ void union_set(char *args)
             (*sets[indexSet3].set)[i/8] |= (1 << (i%8));
             
     }
-    
+
     /* mark the set as not empty */
     sets[indexSet3].isEmpty = 1;    
 }
@@ -160,7 +160,7 @@ void intersect_set(char *args)
     char* value;
     int bit1,bit2;
 
-    printf("\nUNION SET\n");
+    printf("\n INTERSECT SET\n");
 
     /* get the sets id */
     value = strtok(args, ","); 
@@ -172,8 +172,44 @@ void intersect_set(char *args)
     value = strtok(NULL, ","); 
     indexSet3 = string_to_set(value);
 
-    /* put the data of set1 and set2 in set3 
-    zero_set(*sets[indexSet3].set);*/
+    for(i=0; i < CHAR_MAX; i++)
+    {
+        /* get the data of the bit */
+        bit1 = ((*sets[indexSet1].set)[i/8] & (1 << (i%8)));
+        bit2 = ((*sets[indexSet2].set)[i/8] & (1 << (i%8)));
+
+        /* both bits are 1, change bit in set3 to also be 1 */
+        if(bit1 && bit2)
+            (*sets[indexSet3].set)[i/8] |= (1 << (i%8));
+        else /* else zero it */
+            (*sets[indexSet3].set)[i/8] &= ~(1 << (i%8));
+            
+    }  
+
+    /* mark the set as not empty */
+    sets[indexSet3].isEmpty = 1; 
+
+}
+
+/* subtract sets */
+void sub_set(char *args)
+{
+    int i;
+    int indexSet1,indexSet2,indexSet3;
+    char* value;
+    int bit1,bit2;
+
+    printf("\nSUB SET\n");
+
+    /* get the sets id */
+    value = strtok(args, ","); 
+    indexSet1 = string_to_set(value);
+    
+    value = strtok(NULL, ","); 
+    indexSet2 = string_to_set(value);
+
+    value = strtok(NULL, ","); 
+    indexSet3 = string_to_set(value);
 
     for(i=0; i < CHAR_MAX; i++)
     {
@@ -181,9 +217,11 @@ void intersect_set(char *args)
         bit1 = ((*sets[indexSet1].set)[i/8] & (1 << (i%8)));
         bit2 = ((*sets[indexSet2].set)[i/8] & (1 << (i%8)));
 
-        /* if the bit is not 0, print it */
-        if(bit1 && bit2)
+        /* make sure only bits from set1 are set to 1, change bit in set3 to also be 1 */
+        if(bit1 != bit2 && bit1 != 0)
             (*sets[indexSet3].set)[i/8] |= (1 << (i%8));
+        else /* else zero it */
+            (*sets[indexSet3].set)[i/8] &= ~(1 << (i%8));
             
     }  
 

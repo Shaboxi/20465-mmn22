@@ -11,6 +11,7 @@ int main()
         {"print_set", print_set},
         {"union_set", union_set},
         {"intersect_set", intersect_set},
+        {"sub_set", sub_set},
         {"not_valid",NULL}
     };
 

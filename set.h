@@ -25,6 +25,7 @@ void read_set(char *args);
 void print_set(char *args);
 void union_set(char *args);
 void intersect_set(char *args);
+void sub_set(char *args);
 
 /* helper functions */
 int string_to_set(char *set);
