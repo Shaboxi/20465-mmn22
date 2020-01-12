@@ -7,20 +7,20 @@
 #include <stdlib.h>
 #include <limits.h>
 
+#define INPUT_SIZE 100
+
 #define SET_LEN 16 /* the set length */
-
 typedef char set[SET_LEN]; /* define a set as an array of chars */
-
 set SETA,SETB,SETC,SETD,SETE,SETF;
 
 struct SETS
 {
     char *name;
     set *set;
-    int isEmpty; /* accepts 0 or 1, 0 for empty 1 for not empty */
+    int isEmpty; /* accepts 0 or 1. 0 for empty, 1 for not empty */
 };
 
-/* define the commands */
+/* commands */
 void read_set(char *args);
 void print_set(char *args);
 void union_set(char *args);
@@ -32,6 +32,7 @@ void symdiff_set(char *args);
 int string_to_set(char *set);
 int check_duplication(set checkDup, char *value);
 void zero_set(set toZero);
+int validate_input(char *input);
 
 /* define a struct for commands */
 struct CMD
