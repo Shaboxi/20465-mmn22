@@ -36,7 +36,7 @@ int main()
 
     while(1 < 2)
     {
-        printf("\n\nEnter command: \n");
+        printf("\n\nEnter command ya king: \n");
         
         scanf("%[^\n]%*c",input);
 
